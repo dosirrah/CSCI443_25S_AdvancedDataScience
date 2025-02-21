@@ -4,10 +4,10 @@ import scipy.stats as stats
 
 def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None):
     np.random.seed(seed)
-    
+
     lambda_param = 1  # Exponential distribution parameter (rate = 1/lambda)
     population_mean = 1 / lambda_param  # Theoretical mean of Exp(1)
-    
+
     sample_means = []  # Stores sample means over trials
     all_samples = []   # Stores all individual sample values
     total_trials = 0   # Tracks the number of trials
@@ -16,15 +16,18 @@ def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None
 
     # Set up interactive mode
     plt.ion()
-    fig, axes = plt.subplots(2, 1, figsize=(8, 10), gridspec_kw={'height_ratios': [1, 2]})
+    fig, axes = plt.subplots(2, 1, figsize=(10, 6), gridspec_kw={'height_ratios': [1, 2]})
+
+    # ✅ Reduce margins and spacing
+    plt.subplots_adjust(left=0.08, right=0.98, top=0.95, bottom=0.08, hspace=0.25)
 
     def on_key(event):
-        nonlocal total_trials, n, sample_means, all_samples  
+        nonlocal total_trials, n, sample_means, all_samples
 
         sample = []  # ✅ Ensure `sample` is always initialized
 
         if event.key == 'a':  # ✅ Advance 500 sample means
-            num_iterations = 500  
+            num_iterations = 500
             print(f"Advancing 500 sample means (n={n})...")
             for _ in range(num_iterations):
                 total_trials += 1
@@ -34,7 +37,7 @@ def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None
                 all_samples.extend(sample)
 
         elif event.key == 'n':  # ✅ Increase n and regenerate from scratch
-            n += 1  
+            n += 1
             print(f"Increasing sample size to n={n} and regenerating from scratch...")
             recompute_sample_means()
             return  # ✅ Avoid calling `update_plot(sample, ...)` with an invalid sample
@@ -81,7 +84,7 @@ def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None
             y_position = 0.5
             axes[0].scatter(sample, [y_position] * len(sample), color='black', zorder=5, label="Samples")
             for x in sample:
-                axes[0].text(x, y_position + 0.1, f"{x:.2f}", ha='center', fontsize=9, color='blue')
+                axes[0].text(x, y_position - 0.1, f"{x:.2f}", ha='center', fontsize=9, color='blue')  # ✅ Lowered labels
 
             sample_mean = np.mean(sample)
             axes[0].axvline(sample_mean, color='magenta', linestyle='-', linewidth=2, zorder=4, label="Sample Mean", ymin=0, ymax=1)
@@ -111,7 +114,7 @@ def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None
         axes[1].legend(loc="upper right")
 
         plt.draw()
-        plt.pause(0.01)  
+        plt.pause(0.01)
         print(f"Trial {total_trials}: Sample Mean = {sample_means[-1]:.4f}")
         print("Press any key for 1 sample mean, 'a' for 500, 'n' to increase n, or 'q' to quit.")
 
@@ -126,7 +129,7 @@ def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None
     total_trials += 1
     update_plot(first_sample, sample_means, all_samples, total_trials)
 
-    plt.show(block=True)  
+    plt.show(block=True)
 
 # Run the interactive animation
 animated_sampling_distribution(n=4, seed=42)

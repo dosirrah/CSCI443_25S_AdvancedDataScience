@@ -18,6 +18,10 @@ def animated_sampling_distribution(n=4, initial_bins=30, max_bins=120, seed=None
     plt.ion()
     fig, axes = plt.subplots(3, 1, figsize=(8, 12), gridspec_kw={'height_ratios': [1, 3, 3]})
 
+    # ✅ Reduce margins and spacing
+    plt.subplots_adjust(left=0.05, right=0.98, top=0.96, bottom=0.06, hspace=0.22)
+
+
     def on_key(event):
         nonlocal total_trials, n, sample_means, all_samples  # Access state variables
 
